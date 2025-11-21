@@ -1,81 +1,411 @@
-/* DASHBOARD LAYOUT WITH MAP & CONTROLS */
-.dashboard {
-    background: #f0fff4;
-    min-height: 100vh;
+/* ========== RESET & BASE ========== */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
     font-family: 'Poppins', sans-serif;
+    line-height: 1.5;
 }
 
-.dashboard-layout {
+/* Screen reader only - for accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus styles for keyboard navigation */
+input:focus,
+button:focus,
+a:focus {
+    outline: 3px solid #7ed957;
+    outline-offset: 2px;
+}
+
+/* ========== HERO / HOME PAGE ========== */
+.hero-page {
+    height: 100vh;
+    background-color: #2e7d32; /* Fallback */
+    background: linear-gradient(#7ed957bb, #2e7d32aa),
+                url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80")
+                center/cover no-repeat;
     display: flex;
-    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.hero-overlay {
+    text-align: center;
     padding: 20px;
-    flex-wrap: wrap;
 }
 
-.controls-panel {
-    width: 280px;
-    background: #ffffff;
-    padding: 18px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px #0000001a;
-}
-
-.controls-panel h3 {
-    margin-top: 0;
+.hero-title {
+    font-size: 52px;
     margin-bottom: 10px;
 }
 
-.controls-panel label {
-    display: block;
-    text-align: left;
-    margin-top: 10px;
-    font-size: 14px;
+.hero-tagline {
+    font-size: 18px;
+    margin-bottom: 30px;
 }
 
-.controls-panel select {
+.hero-btn {
+    padding: 12px 28px;
+    font-size: 18px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    background: white;
+    color: #2e7d32;
+    font-weight: 600;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.hero-btn:hover {
+    background: #e7ffe8;
+    transform: translateY(-2px);
+}
+
+/* ========== AUTH PAGES ========== */
+.auth-body {
+    height: 100vh;
+    background-color: #2e7d32; /* Fallback */
+    background: linear-gradient(#7ed957bb, #2e7d32aa),
+                url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80")
+                center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.auth-box {
+    background: white;
+    padding: 30px 30px 25px;
     width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    max-width: 320px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+    text-align: center;
 }
 
-.route-btn {
-    margin-top: 15px;
+.auth-box h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #2e7d32;
+}
+
+.auth-box input {
     width: 100%;
     padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.auth-box input:focus {
+    border-color: #2e7d32;
+}
+
+.auth-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
     background: #2e7d32;
     color: white;
-    border: none;
-    border-radius: 8px;
+    font-size: 15px;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
-.route-btn:hover {
-    background: #215a23;
+.auth-btn:hover {
+    background: #205624;
 }
 
-.route-summary {
-    margin-top: 15px;
+.auth-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.switch-text {
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+.switch-text a {
+    color: #2e7d32;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.switch-text a:hover {
+    text-decoration: underline;
+}
+
+/* ========== DASHBOARD ========== */
+.dashboard-body {
+    min-height: 100vh;
+    background: #f3fff5;
+    display: flex;
+    flex-direction: column;
+}
+
+.dash-header {
+    background: linear-gradient(90deg, #2e7d32, #43a047);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.dash-header h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.logout-btn {
+    background: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 14px;
+    cursor: pointer;
     font-size: 14px;
-    text-align: left;
+    transition: background 0.2s;
 }
 
-.map-panel {
+.logout-btn:hover {
+    background: #e7ffe8;
+}
+
+.dash-main {
+    padding: 20px;
     flex: 1;
-    min-width: 260px;
+}
+
+/* Summary Cards */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px 18px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.card h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+}
+
+.card p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #2e7d32;
+}
+
+/* Route Form */
+.route-section {
+    margin-bottom: 20px;
+}
+
+.route-section h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+.route-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.route-form input {
+    flex: 1 1 200px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #bbb;
+    font-size: 14px;
+}
+
+.route-form input:focus {
+    border-color: #2e7d32;
+}
+
+.route-form button {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #2e7d32;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.route-form button:hover {
+    background: #205624;
+}
+
+.route-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.route-hint {
+    font-size: 12px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.red-dot,
+.yellow-dot,
+.green-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 2px;
+}
+
+.red-dot { background: #e53935; }
+.yellow-dot { background: #ffa726; }
+.green-dot { background: #43a047; }
+
+/* Map Section */
+.map-section {
+    margin-top: 10px;
+}
+
+.map-section h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
 }
 
 #map {
     width: 100%;
     height: 400px;
     border-radius: 12px;
-    box-shadow: 0 4px 10px #0000001a;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive */
-@media (max-width: 800px) {
-    .dashboard-layout {
+/* Custom Leaflet marker */
+.custom-marker {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    text-align: center;
+}
+
+/* ========== TOAST NOTIFICATIONS ========== */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast-message {
+    animation: slideIn 0.3s ease;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 600px) {
+    .hero-title {
+        font-size: 36px;
+    }
+
+    .hero-tagline {
+        font-size: 14px;
+    }
+
+    .dash-header {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .dash-header h1 {
+        font-size: 16px;
+        width: 100%;
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card p {
+        font-size: 20px;
+    }
+
+    #map {
+        height: 300px;
+    }
+
+    .route-form {
         flex-direction: column;
+    }
+
+    .route-form input,
+    .route-form button {
+        width: 100%;
+    }
+}
+
+/* ========== ACCESSIBILITY: REDUCED MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+    .dash-header,
+    .route-form button,
+    .logout-btn {
+        display: none;
+    }
+
+    #map {
+        height: 500px;
+        box-shadow: none;
     }
 }
