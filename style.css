@@ -1,97 +1,49 @@
-/* GENERAL FONT */
-body {
-    margin: 0;
+/* DASHBOARD LAYOUT WITH MAP & CONTROLS */
+.dashboard {
+    background: #f0fff4;
+    min-height: 100vh;
     font-family: 'Poppins', sans-serif;
 }
 
-/* ------------------- */
-/* LANDING PAGE DESIGN */
-/* ------------------- */
-body.hero-page {
-    height: 100vh;
-    background: linear-gradient(#7ed957bb, #2e7d32aa),
-                url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80")
-                center/cover no-repeat;
+.dashboard-layout {
     display: flex;
-    flex-direction: column;
-    color: white;
+    gap: 20px;
+    padding: 20px;
+    flex-wrap: wrap;
 }
 
-.topbar {
-    padding: 10px 25px;
-    display: flex;
-    justify-content: space-between;
+.controls-panel {
+    width: 280px;
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px #0000001a;
 }
 
-.logo {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
+.controls-panel h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 
-.hero-content {
-    text-align: center;
-    margin-top: 90px;
+.controls-panel label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 14px;
 }
 
-.title {
-    font-size: 60px;
-    font-weight: 700;
-}
-
-.tagline {
-    font-size: 20px;
-    margin-bottom: 40px;
-}
-
-.start-btn {
-    background: white;
-    color: #2e7d32;
-    padding: 14px 35px;
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: 600;
-}
-
-.start-btn:hover {
-    background: #dfffe0;
-}
-
-/* ------------------- */
-/* AUTH PAGES */
-/* ------------------- */
-.auth-body {
-    height: 100vh;
-    background: linear-gradient(#7ed957bb, #2e7d32aa),
-                url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80")
-                center/cover no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.auth-box {
-    background: white;
-    padding: 35px;
-    width: 330px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0px 4px 15px #00000030;
-}
-
-.auth-box input {
-    width: 90%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
+.controls-panel select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    border-radius: 6px;
     border: 1px solid #ccc;
 }
 
-.auth-btn {
-    width: 90%;
-    padding: 12px;
+.route-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
     background: #2e7d32;
     color: white;
     border: none;
@@ -99,44 +51,31 @@ body.hero-page {
     cursor: pointer;
 }
 
-.auth-btn:hover {
-    background: #1e6020;
+.route-btn:hover {
+    background: #215a23;
 }
 
-/* ------------------- */
-/* DASHBOARD */
-/* ------------------- */
-.dashboard {
-    background: #f4fff5;
-    height: 100vh;
+.route-summary {
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: left;
 }
 
-.navbar {
-    background: #2e7d32;
-    color: white;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
+.map-panel {
+    flex: 1;
+    min-width: 260px;
 }
 
-.logout-btn {
-    background: white;
-    padding: 8px 15px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-}
-
-.cards-container {
-    padding: 25px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
-.card {
-    background: white;
-    padding: 25px;
+#map {
+    width: 100%;
+    height: 400px;
     border-radius: 12px;
-    box-shadow: 0px 4px 10px #00000020;
+    box-shadow: 0 4px 10px #0000001a;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+    .dashboard-layout {
+        flex-direction: column;
+    }
 }
