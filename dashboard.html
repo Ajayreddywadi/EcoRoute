@@ -1,75 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard – EcoRoute</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Leaflet CSS for map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 
-<body class="dashboard">
-
-    <!-- Top bar -->
-    <div class="navbar">
-        <h2>EcoRoute Dashboard</h2>
+<body class="dashboard-body">
+    <header class="dash-header">
+        <h1>🌿 EcoRoute Dashboard</h1>
         <button class="logout-btn" onclick="logoutUser()">Logout</button>
-    </div>
+    </header>
 
-    <!-- Layout: controls + map -->
-    <div class="dashboard-layout">
-
-        <!-- LEFT: Controls -->
-        <div class="controls-panel">
-            <h3>Find Eco-Friendly Route</h3>
-
-            <label for="startSelect">Start</label>
-            <select id="startSelect">
-                <option value="mysuru_palace">Mysuru Palace</option>
-                <option value="vvce">VVCE College, Mysuru</option>
-                <option value="bengaluru_ksrtc">Bengaluru KSRTC Bus Stand</option>
-                <option value="bengaluru_majestic">Majestic, Bengaluru</option>
-            </select>
-
-            <label for="endSelect">Destination</label>
-            <select id="endSelect">
-                <option value="vvce">VVCE College, Mysuru</option>
-                <option value="mysuru_palace">Mysuru Palace</option>
-                <option value="bengaluru_ksrtc">Bengaluru KSRTC Bus Stand</option>
-                <option value="bengaluru_majestic">Majestic, Bengaluru</option>
-            </select>
-
-            <button class="route-btn" onclick="getEcoRoute()">Find Eco Route</button>
-
-            <div class="route-summary">
-                <p><b>Best Route:</b> <span id="bestRouteName">–</span></p>
-                <p>Distance: <span id="bestDistance">–</span> km</p>
-                <p>Traffic Index: <span id="bestTraffic">–</span></p>
-                <p>Avg Pollution (AQI): <span id="bestPollution">–</span></p>
-                <p><b>Eco Score:</b> <span id="bestScore">–</span></p>
+    <main class="dash-main">
+        <!-- Summary cards -->
+        <section class="cards-grid" aria-label="Pollution Statistics">
+            <div class="card">
+                <h3>Average AQI</h3>
+                <p id="avgAqi">–</p>
             </div>
-        </div>
+            <div class="card">
+                <h3>Eco Score</h3>
+                <p id="ecoScore">–</p>
+            </div>
+            <div class="card">
+                <h3>Hotspots (AQI &gt; 150)</h3>
+                <p id="hotspots">0</p>
+            </div>
+            <div class="card">
+                <h3>Data Locations</h3>
+                <p id="locations">0</p>
+            </div>
+        </section>
 
-        <!-- RIGHT: Map -->
-        <div class="map-panel">
-            <div id="map"></div>
-        </div>
-    </div>
+        <!-- Route form -->
+        <section class="route-section">
+            <h2>Plan an Eco-Friendly Route</h2>
+            <form id="routeForm" class="route-form">
+                <label for="fromInput" class="sr-only">From location</label>
+                <input type="text" id="fromInput" placeholder="From (e.g. Mysuru)" required>
 
-    <!-- Cards row -->
-    <div class="cards-container">
-        <div class="card">Average AQI: <span id="avgAqi">–</span></div>
-        <div class="card">CO₂ Level (relative): <span id="co2Level">–</span></div>
-        <div class="card">Eco Score (Best Route): <span id="ecoScoreCard">–</span></div>
-        <div class="card">Hotspots Avoided: <span id="hotspots">0</span></div>
-    </div>
+                <label for="toInput" class="sr-only">To location</label>
+                <input type="text" id="toInput" placeholder="To (e.g. Bengaluru)" required>
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+                <button type="submit">Find Route</button>
+            </form>
+            <p class="route-hint">
+                We show 3 routes:
+                <span class="red-dot" aria-hidden="true"></span> High pollution/traffic,
+                <span class="yellow-dot" aria-hidden="true"></span> Medium,
+                <span class="green-dot" aria-hidden="true"></span> Best eco route.
+            </p>
+        </section>
+
+        <!-- Map -->
+        <section class="map-section" aria-label="Route Map">
+            <h2>Pollution & Route Map</h2>
+            <div id="map" role="application" aria-label="Interactive map showing routes"></div>
+        </section>
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script src="script.js"></script>
     <script>
-        // initialise map & default route when dashboard loads
-        initEcoDashboard();
+        document.addEventListener('DOMContentLoaded', initDashboard);
     </script>
 </body>
 </html>
