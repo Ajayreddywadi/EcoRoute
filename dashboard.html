@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>EcoRoute – Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Dashboard – EcoRoute</title>
+    <link rel="stylesheet" href="05_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
-    <h1>EcoRoute Dashboard 🌿</h1>
+<body class="dashboard">
 
-    <div id="map"></div>
-
-    <div class="info-box">
-        <h3>EcoScore & CO₂ Savings</h3>
-        <p id="ecoscore"></p>
-        <p id="co2"></p>
+    <div class="navbar">
+        <h2>EcoRoute Dashboard</h2>
+        <button class="logout-btn" onclick="logoutUser()">Logout</button>
     </div>
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+    <div class="cards-container">
+        <div class="card">Average AQI: <b>–</b></div>
+        <div class="card">CO₂ Level: <b>–</b></div>
+        <div class="card">Eco Score: <b>–</b></div>
+        <div class="card">Hotspots: <b>0</b></div>
+    </div>
+
 </body>
+<script src="06_script.js"></script>
 </html>
