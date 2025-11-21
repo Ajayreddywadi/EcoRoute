@@ -3,24 +3,73 @@
 <head>
     <title>Dashboard – EcoRoute</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Leaflet CSS for map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="dashboard">
 
+    <!-- Top bar -->
     <div class="navbar">
         <h2>EcoRoute Dashboard</h2>
         <button class="logout-btn" onclick="logoutUser()">Logout</button>
     </div>
 
-    <div class="cards-container">
-        <div class="card">Average AQI: <b>–</b></div>
-        <div class="card">CO₂ Level: <b>–</b></div>
-        <div class="card">Eco Score: <b>–</b></div>
-        <div class="card">Hotspots: <b>0</b></div>
+    <!-- Layout: controls + map -->
+    <div class="dashboard-layout">
+
+        <!-- LEFT: Controls -->
+        <div class="controls-panel">
+            <h3>Find Eco-Friendly Route</h3>
+
+            <label for="startSelect">Start</label>
+            <select id="startSelect">
+                <option value="mysuru_palace">Mysuru Palace</option>
+                <option value="vvce">VVCE College, Mysuru</option>
+                <option value="bengaluru_ksrtc">Bengaluru KSRTC Bus Stand</option>
+                <option value="bengaluru_majestic">Majestic, Bengaluru</option>
+            </select>
+
+            <label for="endSelect">Destination</label>
+            <select id="endSelect">
+                <option value="vvce">VVCE College, Mysuru</option>
+                <option value="mysuru_palace">Mysuru Palace</option>
+                <option value="bengaluru_ksrtc">Bengaluru KSRTC Bus Stand</option>
+                <option value="bengaluru_majestic">Majestic, Bengaluru</option>
+            </select>
+
+            <button class="route-btn" onclick="getEcoRoute()">Find Eco Route</button>
+
+            <div class="route-summary">
+                <p><b>Best Route:</b> <span id="bestRouteName">–</span></p>
+                <p>Distance: <span id="bestDistance">–</span> km</p>
+                <p>Traffic Index: <span id="bestTraffic">–</span></p>
+                <p>Avg Pollution (AQI): <span id="bestPollution">–</span></p>
+                <p><b>Eco Score:</b> <span id="bestScore">–</span></p>
+            </div>
+        </div>
+
+        <!-- RIGHT: Map -->
+        <div class="map-panel">
+            <div id="map"></div>
+        </div>
     </div>
 
-</body>
+    <!-- Cards row -->
+    <div class="cards-container">
+        <div class="card">Average AQI: <span id="avgAqi">–</span></div>
+        <div class="card">CO₂ Level (relative): <span id="co2Level">–</span></div>
+        <div class="card">Eco Score (Best Route): <span id="ecoScoreCard">–</span></div>
+        <div class="card">Hotspots Avoided: <span id="hotspots">0</span></div>
+    </div>
 
-<script src="script.js"></script>
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // initialise map & default route when dashboard loads
+        initEcoDashboard();
+    </script>
+</body>
 </html>
