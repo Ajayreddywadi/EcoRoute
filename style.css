@@ -1,18 +1,24 @@
-body.hero-page {
+/* FONT BASE */
+body {
     margin: 0;
-    padding: 0;
     font-family: 'Poppins', sans-serif;
+}
+
+/* ---------------------------- */
+/* FRONT PAGE (Hero Page) */
+/* ---------------------------- */
+
+body.hero-page {
     height: 100vh;
-    background: linear-gradient(#7ed95799, #2e7d3260),
+    background: linear-gradient(#7ed957bb, #2e7d32aa),
                 url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80")
                 center/cover no-repeat;
     display: flex;
     flex-direction: column;
+    color: white;
 }
 
-/* Top bar */
 .topbar {
-    margin-top: 15px;
     padding: 10px 25px;
     display: flex;
     justify-content: space-between;
@@ -26,17 +32,13 @@ body.hero-page {
 }
 
 .icons span {
-    font-size: 22px;
-    margin-left: 15px;
+    margin-left: 12px;
     cursor: pointer;
 }
 
-/* Main content */
 .hero-content {
     text-align: center;
-    margin-top: 80px;
-    color: white;
-    text-shadow: 1px 2px 4px #00000080;
+    margin-top: 90px;
 }
 
 .title {
@@ -47,23 +49,104 @@ body.hero-page {
 .tagline {
     font-size: 20px;
     margin-bottom: 40px;
-    font-weight: 300;
 }
 
-/* Get Started Button */
 .start-btn {
     background: white;
     color: #2e7d32;
     padding: 14px 35px;
-    font-size: 20px;
     border-radius: 30px;
     border: none;
-    cursor: pointer;
+    font-size: 20px;
     font-weight: 600;
-    transition: 0.2s;
+    cursor: pointer;
 }
 
 .start-btn:hover {
     background: #dfffe0;
-    transform: scale(1.04);
+}
+
+/* ---------------------------- */
+/* LOGIN + SIGNUP */
+/* ---------------------------- */
+
+.auth-body {
+    height: 100vh;
+    background: linear-gradient(#7ed957bb, #2e7d32aa),
+                url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80")
+                center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-box {
+    background: white;
+    padding: 35px;
+    width: 330px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0px 4px 15px #00000030;
+}
+
+.auth-box input {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.auth-btn {
+    width: 90%;
+    padding: 12px;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.auth-btn:hover {
+    background: #1e6020;
+}
+
+/* ---------------------------- */
+/* DASHBOARD */
+/* ---------------------------- */
+
+.dashboard {
+    background: #f4fff5;
+    height: 100vh;
+}
+
+.navbar {
+    background: #2e7d32;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logout-btn {
+    background: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px #00000020;
 }
