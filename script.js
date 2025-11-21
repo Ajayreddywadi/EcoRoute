@@ -1,4 +1,4 @@
-// SIGNUP
+// SIGNUP FUNCTION
 function signupUser() {
     let user = {
         name: document.getElementById("signupName").value,
@@ -6,37 +6,38 @@ function signupUser() {
         password: document.getElementById("signupPassword").value
     };
 
-    localStorage.setItem("EcoRouteUser", JSON.stringify(user));
+    localStorage.setItem("EcoUser", JSON.stringify(user));
 
-    alert("Account created!");
-    window.location.href = "02_login.html";
+    alert("Account created successfully!");
+    window.location.href = "login.html";
+
     return false;
 }
 
-// LOGIN
+// LOGIN FUNCTION
 function loginUser() {
-    let savedUser = JSON.parse(localStorage.getItem("EcoRouteUser"));
+    let savedUser = JSON.parse(localStorage.getItem("EcoUser"));
+
+    if (!savedUser) {
+        alert("No user found. Please sign up.");
+        return false;
+    }
 
     let email = document.getElementById("loginEmail").value;
     let password = document.getElementById("loginPassword").value;
 
-    if (!savedUser) {
-        alert("No account found! Please sign up.");
-        return false;
-    }
-
     if (email === savedUser.email && password === savedUser.password) {
         alert("Login successful!");
-        window.location.href = "04_dashboard.html";
+        window.location.href = "dashboard.html";
     } else {
-        alert("Wrong email or password!");
+        alert("Incorrect email or password!");
     }
 
     return false;
 }
 
-// LOGOUT
+// LOGOUT FUNCTION
 function logoutUser() {
     alert("Logged out!");
-    window.location.href = "02_login.html";
+    window.location.href = "login.html";
 }
