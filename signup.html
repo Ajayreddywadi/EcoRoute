@@ -1,20 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Create Account – EcoRoute</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup – EcoRoute</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="auth-body">
-
     <div class="auth-box">
-        <h2>Create Account</h2>
+        <h2>🌿 Create Account</h2>
 
-        <form onsubmit="return signupUser()">
-            <input type="text" id="signupName" placeholder="Full Name" required>
-            <input type="email" id="signupEmail" placeholder="Email" required>
-            <input type="password" id="signupPassword" placeholder="Password" required>
+        <form id="signupForm">
+            <label for="signupName" class="sr-only">Full Name</label>
+            <input type="text" id="signupName" placeholder="Full Name" autocomplete="name" required>
+
+            <label for="signupEmail" class="sr-only">Email</label>
+            <input type="email" id="signupEmail" placeholder="Email" autocomplete="email" required>
+
+            <label for="signupPassword" class="sr-only">Password</label>
+            <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" autocomplete="new-password" minlength="6" required>
 
             <button type="submit" class="auth-btn">Sign Up</button>
         </form>
@@ -24,6 +31,12 @@
         </p>
     </div>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            signupUser();
+        });
+    </script>
 </body>
 </html>
