@@ -1,67 +1,69 @@
-/* General styling */
-body {
+body.hero-page {
     margin: 0;
-    font-family: Arial, sans-serif;
-    text-align: center;
-}
-
-/* Home Page */
-body.home {
-    background: linear-gradient(#7ed957, #a6e3a1);
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
     height: 100vh;
-    color: white;
+    background: linear-gradient(#7ed95799, #2e7d3260),
+                url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80")
+                center/cover no-repeat;
+    display: flex;
+    flex-direction: column;
 }
 
-.container {
-    padding-top: 100px;
+/* Top bar */
+.topbar {
+    margin-top: 15px;
+    padding: 10px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.btn {
-    background: white;
-    color: #2e7d32;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 6px;
-    font-size: 18px;
+.logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.icons span {
+    font-size: 22px;
+    margin-left: 15px;
     cursor: pointer;
 }
 
-/* Auth Pages */
-body.auth {
-    background: #eaf7ea;
+/* Main content */
+.hero-content {
+    text-align: center;
+    margin-top: 80px;
+    color: white;
+    text-shadow: 1px 2px 4px #00000080;
 }
 
-.auth-box {
+.title {
+    font-size: 60px;
+    font-weight: 700;
+}
+
+.tagline {
+    font-size: 20px;
+    margin-bottom: 40px;
+    font-weight: 300;
+}
+
+/* Get Started Button */
+.start-btn {
     background: white;
-    width: 300px;
-    padding: 25px;
-    margin: 80px auto;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #ccc;
+    color: #2e7d32;
+    padding: 14px 35px;
+    font-size: 20px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
 }
 
-.auth-box input {
-    width: 90%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 5px;
-    border: 1px solid #999;
-}
-
-/* Map */
-#map {
-    width: 90%;
-    height: 450px;
-    margin: 20px auto;
-    border-radius: 10px;
-}
-
-/* Info panel */
-.info-box {
-    width: 80%;
-    margin: 20px auto;
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px #ccc;
+.start-btn:hover {
+    background: #dfffe0;
+    transform: scale(1.04);
 }
