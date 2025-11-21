@@ -1,193 +1,347 @@
-// ------------- LOGIN / SIGNUP / LOGOUT ------------- //
+/************ CONFIG ************/
+const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? "http://127.0.0.1:5000"
+    : "https://your-deployed-backend.onrender.com"; // Change this when deployed
 
-function signupUser() {
-    let name = document.getElementById("signupName").value;
-    let email = document.getElementById("signupEmail").value;
-    let password = document.getElementById("signupPassword").value;
+/************ UTILITIES ************/
+function sanitizeInput(str) {
+    if (!str) return '';
+    return str.replace(/[<>\"']/g, '').trim().substring(0, 100);
+}
+
+function showMessage(msg, type = 'info') {
+    // Remove existing messages
+    const existing = document.querySelector('.toast-message');
+    if (existing) existing.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = `toast-message toast-${type}`;
+    toast.textContent = msg;
+    toast.style.cssText = `
+        position: fixed; top: 20px; right: 20px; padding: 12px 20px;
+        border-radius: 8px; color: white; font-size: 14px; z-index: 9999;
+        background: ${type === 'error' ? '#e53935' : type === 'success' ? '#43a047' : '#1976d2'};
+        animation: slideIn 0.3s ease;
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+}
+
+/************ AUTH FUNCTIONS ************/
+function isLoggedIn() {
+    return localStorage.getItem("EcoRouteUser") !== null;
+}
+
+function getCurrentUser() {
+    const data = localStorage.getItem("EcoRouteUser");
+    return data ? JSON.parse(data) : null;
+}
+
+// Simple hash function for demo (use bcrypt on real backend)
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password + "ecoroute_salt_2024");
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function signupUser() {
+    const name = sanitizeInput(document.getElementById("signupName").value);
+    const email = sanitizeInput(document.getElementById("signupEmail").value);
+    const password = document.getElementById("signupPassword").value.trim();
 
     if (!name || !email || !password) {
-        alert("Please fill all fields");
+        showMessage("Please fill all fields.", "error");
         return false;
     }
 
-    let user = { name, email, password };
-    localStorage.setItem("EcoUser", JSON.stringify(user));
+    if (password.length < 6) {
+        showMessage("Password must be at least 6 characters.", "error");
+        return false;
+    }
 
-    alert("Account created successfully!");
-    window.location.href = "login.html";
+    if (!email.includes('@') || !email.includes('.')) {
+        showMessage("Please enter a valid email.", "error");
+        return false;
+    }
+
+    try {
+        const hashedPassword = await hashPassword(password);
+        const user = { name, email, password: hashedPassword };
+        localStorage.setItem("EcoRouteUser", JSON.stringify(user));
+        showMessage("Account created successfully!", "success");
+        setTimeout(() => window.location.href = "login.html", 1000);
+    } catch (err) {
+        showMessage("Error creating account.", "error");
+    }
     return false;
 }
 
-function loginUser() {
-    let email = document.getElementById("loginEmail").value;
-    let password = document.getElementById("loginPassword").value;
+async function loginUser() {
+    const email = sanitizeInput(document.getElementById("loginEmail").value);
+    const password = document.getElementById("loginPassword").value.trim();
 
-    let savedUser = JSON.parse(localStorage.getItem("EcoUser"));
-
-    if (!savedUser) {
-        alert("No account found. Please sign up first.");
-        return;
+    const saved = localStorage.getItem("EcoRouteUser");
+    if (!saved) {
+        showMessage("No user found. Please sign up first.", "error");
+        return false;
     }
-
-    if (savedUser.email === email && savedUser.password === password) {
-        alert("Login successful!");
-        // REDIRECT TO DASHBOARD
-        window.location.href = "dashboard.html";
-    } else {
-        alert("Invalid email or password.");
-    }
-}
-
-
-function logoutUser() {
-    window.location.href = "login.html";
-}
-
-// ------------- MAP + ECO ROUTE LOGIC ------------- //
-
-let map;
-let allRouteLayers = [];
-
-// Pre-defined demo locations (lat, lon)
-const LOCATIONS = {
-    mysuru_palace: { name: "Mysuru Palace", lat: 12.3052, lon: 76.6552, city: "Mysuru" },
-    vvce: { name: "VVCE College, Mysuru", lat: 12.2958, lon: 76.6394, city: "Mysuru" },
-    bengaluru_ksrtc: { name: "Bengaluru KSRTC Bus Stand", lat: 12.9634, lon: 77.5855, city: "Bengaluru" },
-    bengaluru_majestic: { name: "Majestic, Bengaluru", lat: 12.9778, lon: 77.5713, city: "Bengaluru" }
-};
-
-// Approx AQI values for demo cities
-const CITY_POLLUTION = {
-    Mysuru: 70,
-    Bengaluru: 120
-};
-
-function initEcoDashboard() {
-    // create map centered between Mysuru & Bengaluru
-    map = L.map("map").setView([12.6, 77.0], 8);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19
-    }).addTo(map);
-
-    // default route: Mysuru Palace -> VVCE
-    document.getElementById("startSelect").value = "mysuru_palace";
-    document.getElementById("endSelect").value = "vvce";
-    getEcoRoute();
-}
-
-async function getEcoRoute() {
-    const startKey = document.getElementById("startSelect").value;
-    const endKey = document.getElementById("endSelect").value;
-
-    if (startKey === endKey) {
-        alert("Start and destination must be different.");
-        return;
-    }
-
-    const start = LOCATIONS[startKey];
-    const end = LOCATIONS[endKey];
-
-    // Build OSRM route API URL (free demo server)
-    const url =
-        `https://router.project-osrm.org/route/v1/driving/` +
-        `${start.lon},${start.lat};${end.lon},${end.lat}` +
-        `?overview=full&geometries=geojson&alternatives=true`;
 
     try {
-        const res = await fetch(url);
-        const data = await res.json();
-
-        if (!data.routes || data.routes.length === 0) {
-            alert("No routes found.");
-            return;
+        const user = JSON.parse(saved);
+        const hashedPassword = await hashPassword(password);
+        
+        if (email === user.email && hashedPassword === user.password) {
+            showMessage("Login successful!", "success");
+            setTimeout(() => window.location.href = "dashboard.html", 800);
+        } else {
+            showMessage("Invalid email or password.", "error");
         }
+    } catch (err) {
+        showMessage("Login error. Please try again.", "error");
+    }
+    return false;
+}
 
-        // Remove old routes
-        allRouteLayers.forEach(layer => map.removeLayer(layer));
-        allRouteLayers = [];
+function logoutUser() {
+    showMessage("Logged out successfully.", "success");
+    setTimeout(() => window.location.href = "login.html", 500);
+}
 
-        let bestRoute = null;
-        let bestScore = Infinity;
-        let bestStats = null;
+/************ DASHBOARD INIT ************/
+let map;
+let routeLayers = [];
+let isSearching = false;
 
-        let avgAqiSum = 0;
+function initDashboard() {
+    // Auth guard - redirect if not logged in
+    if (!isLoggedIn()) {
+        window.location.href = "login.html";
+        return;
+    }
 
-        data.routes.forEach((route, index) => {
-            const distanceKm = route.distance / 1000;
-            const durationMin = route.duration / 60;
-            const trafficIndex = durationMin / distanceKm; // higher = more traffic
+    // Display user name if available
+    const user = getCurrentUser();
+    const header = document.querySelector('.dash-header h1');
+    if (header && user?.name) {
+        header.textContent = `Welcome, ${user.name}`;
+    }
 
-            const pollution =
-                (CITY_POLLUTION[start.city] + CITY_POLLUTION[end.city]) / 2;
+    initMap();
+    loadPollutionSummary();
 
-            const ecoScore = calculateEcoScore(distanceKm, trafficIndex, pollution);
+    const form = document.getElementById("routeForm");
+    if (form) {
+        form.addEventListener("submit", onRouteFormSubmit);
+    }
+}
 
-            avgAqiSum += pollution;
+/************ MAP + POLLUTION SUMMARY ************/
+function initMap() {
+    if (typeof L === "undefined") {
+        console.error("Leaflet not loaded");
+        return;
+    }
 
-            // draw route (gray by default)
-            const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
-            const color = "#888";
-            const layer = L.polyline(coords, {
-                color,
-                weight: 4,
-                opacity: 0.7
-            }).addTo(map);
-            allRouteLayers.push(layer);
+    map = L.map('map').setView([22.5, 78.9], 5);
 
-            if (ecoScore < bestScore) {
-                bestScore = ecoScore;
-                bestRoute = route;
-                bestStats = { distanceKm, trafficIndex, pollution };
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+    }).addTo(map);
+}
+
+async function loadPollutionSummary() {
+    const aqiEl = document.getElementById("avgAqi");
+    const ecoEl = document.getElementById("ecoScore");
+    const hotEl = document.getElementById("hotspots");
+    const locEl = document.getElementById("locations");
+
+    if (!aqiEl) return;
+
+    // Show loading state
+    [aqiEl, ecoEl, hotEl, locEl].forEach(el => el.innerText = "...");
+
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        const res = await fetch(
+            "https://api.openaq.org/v2/latest?country=IN&parameter=pm25&limit=50",
+            { signal: controller.signal }
+        );
+        clearTimeout(timeoutId);
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const data = await res.json();
+        const results = data.results || [];
+
+        let total = 0, count = 0, hotspots = 0;
+
+        results.forEach(r => {
+            const measurements = r.measurements || [];
+            const pm25 = measurements.find(m => m.parameter === 'pm25');
+            if (pm25?.value != null) {
+                total += pm25.value;
+                count++;
+                if (pm25.value > 150) hotspots++;
             }
         });
 
-        // Highlight best route in green
-        const bestCoords = bestRoute.geometry.coordinates.map(c => [c[1], c[0]]);
-        const bestLayer = L.polyline(bestCoords, {
-            color: "green",
-            weight: 6,
-            opacity: 0.9
-        }).addTo(map);
-        allRouteLayers.push(bestLayer);
-        map.fitBounds(bestLayer.getBounds());
+        const avg = count ? (total / count).toFixed(1) : "N/A";
+        const eco = count ? Math.max(0, 100 - (avg / 3)).toFixed(1) : "N/A";
 
-        const avgAqi = (avgAqiSum / data.routes.length).toFixed(1);
-
-        // Update text on page
-        document.getElementById("bestRouteName").innerText =
-            `${LOCATIONS[startKey].name} → ${LOCATIONS[endKey].name}`;
-        document.getElementById("bestDistance").innerText =
-            bestStats.distanceKm.toFixed(2);
-        document.getElementById("bestTraffic").innerText =
-            bestStats.trafficIndex.toFixed(2);
-        document.getElementById("bestPollution").innerText =
-            bestStats.pollution.toFixed(0);
-        document.getElementById("bestScore").innerText = bestScore.toFixed(2);
-
-        // cards
-        document.getElementById("avgAqi").innerText = avgAqi;
-        document.getElementById("co2Level").innerText =
-            (bestStats.distanceKm * 0.12).toFixed(1) + " kg (approx)";
-        document.getElementById("ecoScoreCard").innerText =
-            bestScore.toFixed(2);
-        // simple idea: hotspots avoided = if pollution below 100
-        document.getElementById("hotspots").innerText =
-            bestStats.pollution < 100 ? "1" : "0";
+        aqiEl.innerText = avg;
+        ecoEl.innerText = eco;
+        hotEl.innerText = hotspots;
+        locEl.innerText = count;
 
     } catch (err) {
-        console.error(err);
-        alert("Error while fetching route. Try again.");
+        console.error("Pollution data error:", err);
+        aqiEl.innerText = "N/A";
+        ecoEl.innerText = "N/A";
+        hotEl.innerText = "–";
+        locEl.innerText = "–";
     }
 }
 
-// Eco score: lower = better
-function calculateEcoScore(distanceKm, trafficIndex, pollution) {
-    // normalize
-    const d = distanceKm / 20;      // assume 20km as "long"
-    const t = trafficIndex / 4;     // 4 min/km = heavy traffic
-    const p = pollution / 200;      // 200 AQI = very polluted
+/************ ROUTING ************/
+async function onRouteFormSubmit(e) {
+    e.preventDefault();
+    
+    if (isSearching) return;
+    
+    const fromInput = sanitizeInput(document.getElementById("fromInput").value);
+    const toInput = sanitizeInput(document.getElementById("toInput").value);
+    const btn = e.target.querySelector('button');
 
-    // weight traffic most, then pollution, then distance
-    return 0.4 * t + 0.35 * p + 0.25 * d;
+    if (!fromInput || !toInput) {
+        showMessage("Please enter both From and To.", "error");
+        return;
+    }
+
+    isSearching = true;
+    btn.disabled = true;
+    btn.textContent = 'Searching...';
+
+    try {
+        // Add delay between geocode requests (Nominatim rate limit)
+        const start = await geocodePlace(fromInput);
+        await new Promise(r => setTimeout(r, 1100));
+        const end = await geocodePlace(toInput);
+
+        if (!start || !end) {
+            showMessage("Could not locate one of the places. Try a different name.", "error");
+            return;
+        }
+
+        btn.textContent = 'Finding routes...';
+        const routes = await fetchRoutesFromBackend(start, end);
+        
+        if (!routes?.length) {
+            showMessage("No routes found between these locations.", "error");
+            return;
+        }
+
+        drawRoutesOnMap(routes, start, end);
+        showMessage(`Found ${routes.length} routes!`, "success");
+
+    } catch (err) {
+        console.error("Route error:", err);
+        showMessage("Error fetching routes. Is the backend running?", "error");
+    } finally {
+        isSearching = false;
+        btn.disabled = false;
+        btn.textContent = 'Find Route';
+    }
+}
+
+async function geocodePlace(query) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
+    
+    const res = await fetch(url, {
+        headers: { 
+            'Accept-Language': 'en',
+            'User-Agent': 'EcoRoute/1.0'
+        }
+    });
+    
+    if (!res.ok) throw new Error(`Geocode failed: ${res.status}`);
+    
+    const data = await res.json();
+    if (!data?.length) return null;
+
+    return {
+        lat: parseFloat(data[0].lat),
+        lon: parseFloat(data[0].lon),
+        displayName: data[0].display_name
+    };
+}
+
+async function fetchRoutesFromBackend(start, end) {
+    const params = new URLSearchParams({
+        startLat: start.lat,
+        startLon: start.lon,
+        endLat: end.lat,
+        endLon: end.lon
+    });
+    
+    const res = await fetch(`${BACKEND_URL}/api/routes?${params}`);
+    
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `Backend error ${res.status}`);
+    }
+    
+    const data = await res.json();
+    return data.routes || [];
+}
+
+function drawRoutesOnMap(routes, start, end) {
+    if (!map) return;
+
+    // Clear old routes
+    routeLayers.forEach(l => map.removeLayer(l));
+    routeLayers = [];
+
+    const bounds = [];
+    const colorLabels = { green: '🟢 Eco-Best', yellow: '🟡 Medium', red: '🔴 High Emission' };
+
+    routes.forEach((route, idx) => {
+        const latlngs = route.coordinates.map(([lon, lat]) => [lat, lon]);
+        
+        const layer = L.polyline(latlngs, {
+            color: route.color,
+            weight: idx === 0 ? 6 : 4,
+            opacity: idx === 0 ? 1 : 0.7
+        }).addTo(map);
+
+        layer.bindPopup(`
+            <strong>${colorLabels[route.color] || route.color}</strong><br>
+            📏 Distance: ${route.distanceKm} km<br>
+            ⏱️ Time: ${route.durationMin} min<br>
+            🌿 Est. CO₂: ${(route.distanceKm * 0.12).toFixed(1)} kg
+        `);
+
+        routeLayers.push(layer);
+        latlngs.forEach(ll => bounds.push(ll));
+    });
+
+    // Custom markers
+    const greenIcon = L.divIcon({ className: 'custom-marker', html: '🚀', iconSize: [25, 25] });
+    const redIcon = L.divIcon({ className: 'custom-marker', html: '🏁', iconSize: [25, 25] });
+
+    const startMarker = L.marker([start.lat, start.lon], { icon: greenIcon })
+        .addTo(map).bindPopup(`<strong>Start:</strong><br>${start.displayName}`);
+    const endMarker = L.marker([end.lat, end.lon], { icon: redIcon })
+        .addTo(map).bindPopup(`<strong>End:</strong><br>${end.displayName}`);
+    
+    routeLayers.push(startMarker, endMarker);
+    bounds.push([start.lat, start.lon], [end.lat, end.lon]);
+
+    if (bounds.length) {
+        map.fitBounds(bounds, { padding: [40, 40] });
+    }
 }
