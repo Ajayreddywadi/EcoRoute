@@ -9,10 +9,13 @@ function signupUser() {
     localStorage.setItem("EcoUser", JSON.stringify(user));
 
     alert("Account created successfully!");
+
+    // CORRECT REDIRECT
     window.location.href = "login.html";
 
     return false;
 }
+
 
 // LOGIN FUNCTION
 function loginUser() {
@@ -41,3 +44,4 @@ function logoutUser() {
     alert("Logged out!");
     window.location.href = "login.html";
 }
+
