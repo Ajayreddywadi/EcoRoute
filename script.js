@@ -26,17 +26,18 @@ function loginUser() {
 
     if (!savedUser) {
         alert("No account found. Please sign up first.");
-        return false;
+        return;
     }
 
     if (savedUser.email === email && savedUser.password === password) {
         alert("Login successful!");
+        // REDIRECT TO DASHBOARD
         window.location.href = "dashboard.html";
     } else {
         alert("Invalid email or password.");
     }
-    return false;
 }
+
 
 function logoutUser() {
     window.location.href = "login.html";
